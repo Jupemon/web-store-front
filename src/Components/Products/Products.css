@@ -1,0 +1,43 @@
+span {
+    width: 25%;
+}
+.purple-button {
+    display: inline;
+}
+.products-holder {
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+    box-shadow: rgba(0, 0, 0, 0.15) 2.5px 1px 2px 1px;
+}
+.products-holder-holder {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.btn-primary:not(:disabled):not(.disabled).active:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255,143,255,.5);
+}
+
+.purple-button .btn-primary:not(:disabled):not(.disabled):active {
+    background-color: purple;
+}
+.purple-button button{
+    color: purple;
+    border: 1px solid purple;
+    background-color: white;
+}
+
+.purple-button button:hover{
+    background-color: purple;
+}
+
+.purple-button button:active {
+    background-color: black;
+}
+
+.purple-button .btn-primary:not(:disabled):not(.disabled).active {
+    background-color: purple;
+}
+.overlay:hover {
+    opacity: 0.8 !important;
+}

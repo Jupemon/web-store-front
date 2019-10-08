@@ -1,0 +1,33 @@
+.outer {
+    position: relative;
+}
+
+.overlay {
+    display: none;
+    text-align: center;
+}
+
+.overlay p {
+    padding-top: 50px;
+}
+.outer:hover .overlay {	
+    cursor: pointer;
+    display: block;
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background: black;
+    opacity: 0.7;
+    top: 0;
+}
+
+ul {
+    list-style: none;
+}
+ul li {
+
+}
+
+ul li:hover {
+    color: rgba(229, 0, 125, 1)
+}
