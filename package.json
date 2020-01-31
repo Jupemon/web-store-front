@@ -1,7 +1,7 @@
 {
-  "name": "ecommerce-manage",
+  "name": "web-store-front-manage",
   "version": "0.1.0",
-  "homepage": "https://Jupemon.github.io/ecommerce-manage",
+  "homepage": "https://jupemon.github.io/web-store-front-manage/",
   "private": true,
   "dependencies": {
     "bootstrap": "^4.3.1",
@@ -15,7 +15,7 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "start": "set PORT=3001 && react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
