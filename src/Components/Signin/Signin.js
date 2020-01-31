@@ -20,7 +20,7 @@ class Signin extends Component {
     })*/
   handleSignIn = () => {
     console.log("signin") //"https://young-bayou-22235.herokuapp.com/signin"
-    fetch("http://localhost:3000/signin", {
+    fetch("https://young-bayou-22235.herokuapp.com/signin", {
             method : 'POST',
             headers: {
               'Content-Type' : 'application/json'
@@ -41,7 +41,8 @@ class Signin extends Component {
             localStorage.getItem('user') ? console.log("localstorage user already exists")
             : localStorage.setItem('user', JSON.stringify(data));
             this.setState({loggedIn : true}); // makes sure component is re-rendered so that signed in div is rendered
-            this.props.logIn(data)
+            console.log(data.account)
+            this.props.logIn(data.account)
           }
           else {
             console.log()

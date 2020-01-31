@@ -20,14 +20,19 @@ class DeleteProduct extends Component {
     sendDeleteProduct = () => {
         console.log("product deleted")
         const token = localStorage.getItem('token');
-        fetch(`http://localhost:3000/deleteproduct/${this.props.selectedProduct.productid}`, {
+        // localhost
+        fetch(`https://young-bayou-22235.herokuapp.com/deleteproduct/${this.props.selectedProduct.productid}`, {
         headers : {
           'Authorization' : `Bearer ${token}`
         },
         method:"post"
       }).then(resp => {
         if (resp.status === 200) {
+          this.props.GetProducts()
           this.setState({productDeleted : true})
+        }
+        else if (resp.status === 401) {
+          alert("unauthorized access, please sign in")
         }
       })
         
@@ -46,7 +51,7 @@ class DeleteProduct extends Component {
                         <div className="cart-items">
                         { this.state.productDeleted ? <div>Product Deleted</div> :
                         <Card style={{ width: '12rem' }} key={this.props.selectedProduct.productid}>
-                        <Card.Img variant="top" style={{width:"190px", height:"190px"}} src={`http://localhost:3000/image/${this.props.selectedProduct.productid}`}/>
+                        <Card.Img variant="top" style={{width:"190px", height:"190px"}} src={`https://young-bayou-22235.herokuapp.com/image/${this.props.selectedProduct.productid}`}/>
                         <Card.Title>{this.props.selectedProduct.name}</Card.Title>
                         <Card.Text>{this.props.selectedProduct.price}</Card.Text>
                         <div className="delete-confirmation" style={{}}>Are you sure you want to delete this product?

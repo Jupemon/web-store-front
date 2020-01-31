@@ -6,33 +6,54 @@ class Account extends Component {
     constructor(props) {
         super();
         this.state = {
-            changeAccountDetails : false,
+            changeAccountDetails : true,
             deleteAccount : false,
-            accountDeleted: false
+            accountDeleted: false,
+            changeUsername : true,
+            changeEmail : true,
+            changePassword : true,
+
+            name : "",
+            email : "",
+            password : ""
         }
     }
 
 
     changeProfile = (data) => {
-      fetch(`https://young-bayou-22235.herokuapp.com/changeprofile/${data.id}`, {
+      const body = {};
+      if (!this.state.changeUsername && this.state.name.length > 0) {
+        body.name = this.state.name
+      }
+      if (!this.state.changeEmail && this.state.email.length > 0) {
+        body.email = this.state.email
+      }
+      if (!this.state.changePassword && this.state.password.length > 0) {
+        body.password = this.state.password
+      }
+      console.log(data.id, "USER ID")
+      console.log(body, "BODY TO BE SENT")
+        //http://localhost:3000/changeprofile/
+      fetch(`https://young-bayou-22235.herokuapp.com/${data.id}`, {
         method: 'POST',
         headers: {
           'Content-Type' : 'application/json'
         },
-        body : JSON.stringify({email: this.refs.changingEmail.value, name: this.refs.changingUsername.value})
+        body : JSON.stringify(body)
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data === "data changed") {
-          console.log("data changed succesfully, log in with your new credentials");
-          this.props.logOut();
+      .then(res => {
+        if (res.status===200) {
+          res.json()
+          .then(data => {
+            console.log(data)
+            this.setState({datachanged : true})
+          })
         }
-        else if (data==="dublicate username or email exists") {
-          console.log("dub exists");
+        else if (res.status === 403) {
+          alert("email already exists")
         }
-        else {
-          console.log("id not found")
-        }
+        else if (res.status === 400)
+        alert("something went wrong")
       })
     }
 
@@ -43,7 +64,7 @@ class Account extends Component {
         headers: {
           'Content-Type' : 'application/json'
         },
-        body : JSON.stringify({email: this.props.account.email, name: this.props.account.username, password: this.refs.confirmationPassword.value})
+        body : JSON.stringify({email: this.props.account.email, name: this.props.account.name, password: this.refs.confirmationPassword.value})
       })
       .then(res => res.json())
       .then(data => {
@@ -64,6 +85,7 @@ class Account extends Component {
 
     render() {
         return (    <div className={"cart-modal"}>
+        {console.log(this.props.account.name)}
         <div className="cart-back">
             <div className="cart-title">
                 <i className="fas fa-user fa-3x"></i>
@@ -79,23 +101,29 @@ class Account extends Component {
             <div className="account-info">
             {this.state.changeAccountDetails ? <div>
 
-            </div> : <div><p>{this.props.account.username}</p>
+            </div> : <div><p>{this.props.account.name}</p>
             <hr />
             <p>{this.props.account.email}</p></div>}
             </div>
             <h2 style={{paddingTop:"25px"}}>Change account details</h2>
             <Form>
-            <Form.Group controlId="accountBasicPassword">
-    <Form.Label>New Username</Form.Label>
-    <Form.Control type="text" placeholder={this.props.account.username} ref={"changingUsername"}/>
-  </Form.Group>
-  <Form.Group controlId="accountBasicEmail">
+            {this.state.changeEmail ? <div className="change-info-button"><Button onClick={() =>{this.setState({changeEmail : !this.state.changeEmail})}}>Change Email</Button></div> : 
+            <div>
     <Form.Label>New Email</Form.Label>
-    <Form.Control type="email" placeholder={this.props.account.email} ref={"changingEmail"}/>
-    <Form.Text className="text-muted">
-    aopraerobaer
-    </Form.Text>
-  </Form.Group>
+    <Form.Control type="text" placeholder={this.props.account.name} onChange={(e) => {this.setState({email : e.currentTarget.value})}}/>
+    </div>    
+            }
+            {this.state.changeUsername ? <div className="change-info-button"><Button onClick={() => {this.setState({changeUsername : !this.state.changeUsername})}}>Change Username</Button></div> : 
+            <div>
+    <Form.Label>New Username</Form.Label>
+    <Form.Control type="text" placeholder={this.props.account.name} onChange={(e) => {this.setState({name : e.currentTarget.value})}}/>
+    </div>}
+    {/*this.state.changePassword ? <div className="change-info-button"><Button onClick={() => {this.setState({changePassword : !this.state.changePassword})}}>Change Password</Button></div> : 
+            <div>
+    <Form.Label>New Password</Form.Label>
+    <Form.Control type="text" placeholder={this.props.account.name} onChange={(e) => {this.setState({password : e.currentTarget.value})}}/>
+    </div>    
+            */}
   <Button variant="danger" onClick={() => {this.changeProfile(this.props.account)}}>
     Save Changes
   </Button>

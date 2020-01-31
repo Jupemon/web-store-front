@@ -28,18 +28,22 @@ class AddCategory extends Component {
     sentCategory = () => {
         const {itemsToBeAdded, title} = this.state
 
-        const body = {name : title, items : itemsToBeAdded};
-
-        console.log(body)
-
-        fetch("http://localhost:3000/test", {
+        const body = {name : title.toLowerCase().replace(" ", "_"), items : itemsToBeAdded};
+        const token = localStorage.getItem('token');
+            //http://localhost:3000/addcategory
+        fetch("https://young-bayou-22235.herokuapp.com/addcategory", {
             method : 'POST',
             headers: {
+              'Authorization' : `Bearer ${token}`,
               'Content-Type' : 'application/json'
             },
             body : JSON.stringify(body)
           })
-          .then(res => res.json())
+          .then(res => {
+              if (res.status === 401) {
+                  alert("unauthorized access, ")
+              }
+          })
           .then(data => {
               console.log(data)
           })

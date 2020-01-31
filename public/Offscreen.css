@@ -68,3 +68,7 @@
     width: 100px;
     margin: auto;
   }
+
+  .change-info-button {
+    padding: 20px;
+  }

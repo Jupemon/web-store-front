@@ -82,7 +82,7 @@ class Products extends Component {
       }
 
       DeleteProduct = (id) => { //  fetch(`http://localhost:3000/deleteproduct/${id}`
-          fetch(`http://localhost:3000/deleteproduct/${id}`, {
+          fetch(`https://young-bayou-22235.herokuapp.com/${id}`, {
               method: "post"
           })
           .then(res => {
@@ -171,7 +171,7 @@ class Products extends Component {
                                 <Col md="8">
                                 <div className="products-holder">
                                 <div className="products-holder-holder">
-                                {this.state.filteredProducts.map(item => 
+                                {this.state.filteredProducts.map(item =>
                                 <Card style={{ width: '12rem' }} key={item.ID}>
                                 <div className={`outer`}>
                                 <div style={{right:"0px"}} className="overlay" onClick={ ()=> this.props.toggleModal("deleteproduct", item)}>
@@ -180,10 +180,15 @@ class Products extends Component {
                                 <div className="overlay" onClick={()=> this.props.toggleModal("changeproduct", item)}>
                                 <i style={{paddingTop:"50px", color:"white"}} className="fas fa-file-invoice fa-4x"><p style={{fontSize:"15px"}}>Change Data</p></i>
                                 </div>
-                                <Card.Img variant="top" style={{width:"190px", height:"190px"}} src={`http://localhost:3000/image/${item.productid}`}/>
+                                <Card.Img variant="top" style={{width:"190px", height:"190px"}} src={`https://young-bayou-22235.herokuapp.com/image/${item.productid}`}/>
                                 </div>
                                 <Card.Title>{item.name}</Card.Title>
-                                <Card.Text>{item.price}€</Card.Text>
+                                {Object.entries(item).map(i => {
+                                    if (i[0]!== "selected") {
+                                        return <Card.Text>{i[0] + " : " +i[1]}</Card.Text>
+                                    }
+                                    
+                                })}
                                 </Card>)}
                                 </div>
                                 </div>

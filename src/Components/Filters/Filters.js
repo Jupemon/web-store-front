@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Col, Button, Card } from 'react-bootstrap';
 import { thisExpression } from '@babel/types';
+import AddFilterButton from '../AddFilterButton/AddFilterButton';
 
 class Filters extends Component {
     constructor(props) {
@@ -11,9 +12,10 @@ class Filters extends Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:3000/getcategories')
+        fetch('https://young-bayou-22235.herokuapp.com/getcategories')
         .then(resp => resp.json())
         .then(data => {
+            console.log(data)
             this.setState({categories : data})
         })
     }
@@ -33,7 +35,7 @@ class Filters extends Component {
                                                 {cat.items.map(item => {
                                                     return <div className="purple-button"><Button variant="primary" onClick={(e) => {this.props.handleFilterProducts(e, item, cat.name)}}>{item}</Button></div>
                                                 })}
-                                                <div className="purple-button"><Button variant="primary" onClick={(e) => {this.addNewFilter(e, "Bottle", "shape")}}>+Add</Button></div>
+                                                <AddFilterButton CategoryName={cat.name}/>
                                         </div>
                                     })}
                                 </Card.Body>

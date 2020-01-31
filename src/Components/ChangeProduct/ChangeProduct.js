@@ -11,6 +11,7 @@ class ChangeProduct extends Component {
         productAmount : "",
         productImage : null,
         productData : new FormData(),
+        categories : [],
         colors: ["Red", "Black", "Brown", "Yellow", "Pink", "Blue", "Green", "Orange", "White"],
         tastes: ["Sour", "Fruity", "Chocolate", "Liquorice"],
         shapes: ["Ball", "Animal", "Cylinder", "Skull", "Bottle", "Brick", "Ring"],
@@ -18,16 +19,21 @@ class ChangeProduct extends Component {
     }
 }
 
-componentDidMount(props) {
-  console.log(this.props.selectedProduct.amount)
-  console.log(this.props.selectedProduct.price)
-  console.log(this.props.selectedProduct.manufacturer)
-  console.log(this.props.selectedProduct.taste)
-  console.log(this.props.selectedProduct.shape)
-  console.log(this.props.selectedProduct.color)
-
-  //this.updateProductData("color", valueToUpdate)
+componentDidMount() { // http://localhost:3000/
+  fetch('https://young-bayou-22235.herokuapp.com/getcategories', {
+    method:"get"
+  })
+  .then(res => res.json())
+  .then(data => {
+    const categories = this.state.categories;
+      console.log(data)
+      data.map(cat => {
+        categories.push(cat);
+      })
+      this.setState({ categories })
+  })
 }
+
 
 updateProductData = (valueToUpdate, value) => {
   const productData = this.state.productData;
@@ -49,9 +55,9 @@ sendUpdatedProduct = () => {
   }
   if (this.state.productAmount.length > 0) {
     productData.append('amount', this.state.productAmount);
-  }
+  } //localhost
   const token = localStorage.getItem('token'); //updateproduct/${this.props.selectedProduct.productid}
-      fetch(`http://localhost:3000/updateproduct/${this.props.selectedProduct.productid}`, {
+      fetch(`https://young-bayou-22235.herokuapp.com/updateproduct/${this.props.selectedProduct.productid}`, {
         headers : {
           'Authorization' : `Bearer ${token}`
         },
@@ -61,6 +67,9 @@ sendUpdatedProduct = () => {
         if (resp.status === 200) {
           this.props.getProducts()
           this.setState({productChanged : true})
+        }
+        else if (resp.status === 401) {
+          alert("unauthorized access, please sign in")
         }
       })
 }
@@ -92,34 +101,17 @@ sendUpdatedProduct = () => {
 
       </Form.Group>
       <Form.Group as={Col} controlId="formGridState">
-      <Form.Label>Color</Form.Label>
-      <Form.Control defaultValue={this.props.selectedProduct.color} as="select" onChange={(e)=> {this.updateProductData("color", e.currentTarget.value)}}>
-        <option>Pick color</option>
-        {this.state.colors.map(i => {
+      {this.state.categories.map(fil => {
+        return (<div>
+          <Form.Label>{fil.name}</Form.Label>
+          <Form.Control as="select" onChange={(e)=> {this.updateProductData(fil.name, e.currentTarget.value)}}>
+        <option>{"Pick "} {fil.name}</option>
+        {fil.items.map(i => {
           return <option key={i}>{i}</option>
         })}
       </Form.Control>
-      <Form.Label>Taste</Form.Label>
-      <Form.Control defaultValue={this.props.selectedProduct.taste} as="select" onChange={(e)=> {this.updateProductData("taste", e.currentTarget.value)}}>
-        <option>Pick taste</option>
-        {this.state.tastes.map(i => {
-          return <option key={i}>{i}</option>
-        })}
-      </Form.Control>
-      <Form.Label>Shape</Form.Label>
-      <Form.Control defaultValue={this.props.selectedProduct.shape} as="select" onChange={(e)=> {this.updateProductData("shape", e.currentTarget.value)}}>
-        <option>Pick shape</option>
-        {this.state.shapes.map(i => {
-          return <option key={i}>{i}</option>
-        })}
-      </Form.Control>
-      <Form.Label>Manufacturer</Form.Label>
-      <Form.Control defaultValue={this.props.selectedProduct.manufacturer} as="select" onChange={(e)=> {this.updateProductData("manufacturer", e.currentTarget.value)}}>
-        <option>Pick manufacturer</option>
-        {this.state.manufacturer.map(i => {
-          return <option key={i}>{i}</option>
-        })}
-      </Form.Control>
+        </div>)
+      })}
     </Form.Group>
     </Form>}
                         </div>

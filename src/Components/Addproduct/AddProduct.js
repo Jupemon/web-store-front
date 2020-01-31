@@ -12,12 +12,30 @@ class Addproduct extends Component {
             productAmount : "",
             productImage : null,
             productData : new FormData(),
+            categories : [],
             colors: ["Red", "Black", "Brown", "Yellow", "Pink", "Blue", "Green", "Orange", "White"],
             tastes: ["Sour", "Fruity", "Chocolate", "Liquorice"],
             shapes: ["Ball", "Animal", "Cylinder", "Skull", "Bottle", "Brick", "Ring"],
             manufacturer: ["Panda", "Fazer"]
         }
     }
+
+
+    componentDidMount() { // http://localhost:3000/
+      fetch('https://young-bayou-22235.herokuapp.com/getcategories', {
+        method:"get"
+      })
+      .then(res => res.json())
+      .then(data => {
+        const categories = this.state.categories;
+          console.log(data)
+          data.map(cat => {
+            categories.push(cat);
+          })
+          this.setState({ categories })
+      })
+    }
+
 
     updateProductData = (valueToUpdate, value) => {
       const productData = this.state.productData;
@@ -38,10 +56,12 @@ class Addproduct extends Component {
       productData.append('price', this.state.productPrice);
       productData.append('productImage', this.state.productImage);
       console.log("product adding") //"https://young-bayou-22235.herokuapp.com/signin"
-      console.log(productData)
-      
+      for (var pair of this.state.productData.entries()) {
+        console.log(pair[0] + " : " + pair[1]); 
+     }
       const token = localStorage.getItem('token');
-      fetch('http://localhost:3000/addproduct', {
+        // http://localhost:3000/ https://young-bayou-22235.herokuapp.com/addproduct
+      fetch('https://young-bayou-22235.herokuapp.com/addproduct', {
         headers : {
           'Authorization' : `Bearer ${token}`
         },
@@ -52,6 +72,9 @@ class Addproduct extends Component {
         console.log(data, "DATA OF THE RESPONSE")
         if (data.status === 400) {
           this.setState({ productSent : true})
+        }
+        else if (data.status === 401) {
+          alert("unauthorized access, please sign in");
         }
         else {
           this.setState({ productSentError: true })
@@ -84,34 +107,17 @@ class Addproduct extends Component {
 
       </Form.Group>
       <Form.Group as={Col} controlId="formGridState">
-      <Form.Label>Color</Form.Label>
-      <Form.Control as="select" onChange={(e)=> {this.updateProductData("color", e.currentTarget.value)}}>
-        <option>Pick color</option>
-        {this.state.colors.map(i => {
+      {this.state.categories.map(fil => {
+        return (<div>
+          <Form.Label>{fil.name}</Form.Label>
+          <Form.Control as="select" onChange={(e)=> {this.updateProductData(fil.name, e.currentTarget.value)}}>
+        <option>{"Pick "} {fil.name}</option>
+        {fil.items.map(i => {
           return <option key={i}>{i}</option>
         })}
       </Form.Control>
-      <Form.Label>Taste</Form.Label>
-      <Form.Control as="select" onChange={(e)=> {this.updateProductData("taste", e.currentTarget.value)}}>
-        <option>Pick taste</option>
-        {this.state.tastes.map(i => {
-          return <option key={i}>{i}</option>
-        })}
-      </Form.Control>
-      <Form.Label>Shape</Form.Label>
-      <Form.Control as="select" onChange={(e)=> {this.updateProductData("shape", e.currentTarget.value)}}>
-        <option>Pick shape</option>
-        {this.state.shapes.map(i => {
-          return <option key={i}>{i}</option>
-        })}
-      </Form.Control>
-      <Form.Label>Manufacturer</Form.Label>
-      <Form.Control as="select" onChange={(e)=> {this.updateProductData("manufacturer", e.currentTarget.value)}}>
-        <option>Pick manufacturer</option>
-        {this.state.manufacturer.map(i => {
-          return <option key={i}>{i}</option>
-        })}
-      </Form.Control>
+        </div>)
+      })}
       <div className="form-group">
     <label for="exampleFormControlFile1">Add image</label>
     <input type="file" className="form-control-file" id="exampleFormControlFile1" onChange={(e) => {this.setState({productImage : e.currentTarget.files[0]})}}/>

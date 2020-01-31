@@ -8,7 +8,6 @@ import Roster from './Components/Roster/Roster';
 import Promo from './Components/Promo/Promo';
 import Footer from './Components/Footer/Footer';
 import Categories from './Components/Categories/Categories';
-import { thisTypeAnnotation, thisExpression } from '@babel/types';
 import Loading from './Components/Loading/Loading';
 
 class App extends Component {
@@ -18,7 +17,6 @@ class App extends Component {
       this.removeFromCart = this.removeFromCart.bind(this);
       this.addToCart = this.addToCart.bind(this);
       this.state = {
-        timeSpend : 0,
         session : {
           timeSpendOnSite : 0,
           registered : false,
@@ -49,16 +47,13 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.toggleModal("signin")
-    localStorage.getItem('user') ?
-    this.logIn(JSON.parse(localStorage.getItem('user'))) :
     console.log("user doesnt exist in the localstorage");
     this.GetProducts();
     
   }
 
-  GetProducts = () => {
-    fetch("http://localhost:3000/getproducts", {
+  GetProducts = () => { //"http://localhost:3000/getproducts"
+    fetch("https://young-bayou-22235.herokuapp.com/getproducts", {
       method: 'get'
     })
     .then( resp => resp.json())
@@ -68,24 +63,11 @@ class App extends Component {
         retrievedData : true
       });
     })
+    this.forceUpdate()
   }
-
-  createStylesheet = (src) => {
-    
-    if (document.createStylesheet) {
-      document.createStylesheet(src)
-    }
-    else {
-      const stylesheet = document.createElement('link');
-      stylesheet.href = src;
-      stylesheet.type = 'text/css';
-      document.getElementsByTagName('head')[0].appendChild(stylesheet)
-    }
-  }
-
 
   saveSession = () => {
-    console.log("hi");
+    console.log("session saved");
   }
 
   logOut = () => {
@@ -151,9 +133,9 @@ class App extends Component {
 
   }
 
-  logIn = (data) => {
-    console.log(data[0], "DATA HERE?");
-    this.setState({loggedIn : true, account: data[0]}, () => {console.log("log in happened")})
+  logIn = (account) => {
+    console.log(account, "DATA HERE?");
+    this.setState({loggedIn : true, account: account}, () => {console.log("log in happened")})
   }
 
   changeRoute = (route) => {
@@ -252,7 +234,7 @@ class App extends Component {
           { this.state.renderedModal==="signin" && <this.state.SigninComponent logIn={this.logIn} toggleModal={this.toggleModal}/>}
           { this.state.renderedModal==="register" && <this.state.RegisterComponent toggleModal={this.toggleModal}/>}
           { this.state.renderedModal==="changeproduct" && <this.state.changeProductComponent getProducts={this.GetProducts} selectedProduct={this.state.selectedProduct} toggleModal={this.toggleModal}/>}
-          { this.state.renderedModal==="deleteproduct" && <this.state.deleteProductComponent selectedProduct={this.state.selectedProduct} toggleModal={this.toggleModal}/>}
+          { this.state.renderedModal==="deleteproduct" && <this.state.deleteProductComponent getProducts={this.GetProducts} selectedProduct={this.state.selectedProduct} toggleModal={this.toggleModal}/>}
           { this.state.renderedModal==="addcategory" && <this.state.addCategoryComponent toggleModal={this.toggleModal}/>}
         </Modal>}
         {this.state.route==="main" ? <div>
