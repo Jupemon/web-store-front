@@ -1,0 +1,1 @@
+{"version":3,"sources":["DeleteProduct.css"],"names":[],"mappings":"AAAA,qBACI,iBAAkB,CAClB,gBAAiB,CACjB,SAAU,CACV,UACJ,CACA,4BACI,eACJ","file":"9.949b95b5.chunk.css","sourcesContent":[".delete-confirmation {\r\n    position: absolute;\r\n    padding-top: 50px;\r\n    width: 50%;\r\n    left: 300px;\r\n}\r\n.delete-confirmation-button {\r\n    margin-top: 25px;\r\n}"]}
