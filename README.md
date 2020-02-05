@@ -3,6 +3,10 @@
 ## Info
 This is the managing part of the online store i created on, it is connected to the server which is running on heroku. Editing products will change their data in the database.
 
+## Blog post
+
+I wrote a blog post about this project : https://jupemon.blogspot.com/2020/02/what-i-learned-from-building-failed-e.html
+
 ## Web store project
 My plan was to create an online e-commerce platform which could be used to sell candy, clothes, electronics, etc. (currently optimized for selling candy). The goal was to create a database for the products, interface for managing the products and another interface for selling the products. I was able to create a bunch of e-commerce functionalities until i eventually stopped working on it.
 
